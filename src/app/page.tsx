@@ -7,19 +7,16 @@ import { EmailOTPVerification } from "@/components/emailOTPVerification";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<"OKTO" | "Metamask">("OKTO");
-  const {
-    isLoggedIn,
-    getWallets,
-    getUserDetails,
-    createWallet,
-    logOut,
-  } = useOkto() as OktoContextType;
+  const { isLoggedIn, getWallets, getUserDetails, createWallet, logOut } =
+    useOkto() as OktoContextType;
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const details = await getUserDetails();
         console.log("details :", details);
+        setEmail(details?.email);
         const wallets = await createWallet();
         console.log("getWallets : ", wallets);
 
@@ -37,30 +34,41 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-200">
-      <header className="p-4 flex justify-end items-center">
+      <header className="p-4 flex justify-between items-center">
         {activeTab === "OKTO" ? (
           <>
-            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-sm">
-              <div
-                className={`w-3 h-3 rounded-full ${
-                  isLoggedIn ? "bg-green-500" : "bg-red-500"
-                }`}
-              ></div>
-              <span className="text-sm font-medium">
-                Status: {isLoggedIn ? "Logged In" : "Not Logged In"}
-              </span>
+            {email ? (
+              <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-sm">
+                <span className="text-sm font-medium text-gray-700">
+                  {email}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-sm"></div>
+            )}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2 shadow-sm">
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    isLoggedIn ? "bg-green-500" : "bg-red-500"
+                  }`}
+                ></div>
+                <span className="text-sm font-medium">
+                  Status: {isLoggedIn ? "Logged In" : "Not Logged In"}
+                </span>
+              </div>
+              <button
+                disabled={!isLoggedIn}
+                onClick={() => {
+                  logOut();
+                }}
+                className="ml-4 relative inline-flex items-center justify-center  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white"
+              >
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                  Logout
+                </span>
+              </button>
             </div>
-            <button
-              disabled={!isLoggedIn}
-              onClick={() => {
-                logOut();
-              }}
-              className="ml-4 relative inline-flex items-center justify-center  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white"
-            >
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Logout
-              </span>
-            </button>
           </>
         ) : (
           <></>
