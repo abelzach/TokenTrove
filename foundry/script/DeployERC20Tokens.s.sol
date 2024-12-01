@@ -13,9 +13,9 @@ contract DeployERC20TokensScript is Script {
         uint256 initialSupply = 10000;
 
         new CustomERC20("AlphaToken", "ALPHA", initialSupply);
-        new CustomERC20("BetaToken", "BETA", initialSupply);
-        new CustomERC20("GammaToken", "GAMMA", initialSupply);
-        new CustomERC20("DeltaToken", "DELTA", initialSupply);
+        // new CustomERC20("BetaToken", "BETA", initialSupply);
+        // new CustomERC20("GammaToken", "GAMMA", initialSupply);
+        // new CustomERC20("DeltaToken", "DELTA", initialSupply);
 
         vm.stopBroadcast();
     }

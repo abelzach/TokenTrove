@@ -20,19 +20,51 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { OktoContextType, useOkto } from "okto-sdk-react";
+import { nanoid } from "nanoid";
+import { approveToken, createPayoutTxData } from "@/lib/transaction";
+
+const networkName = "POLYGON_TESTNET_AMOY";
 
 export default function PayoutLinkGenerator() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [password, setPassword] = useState("");
+  const { getWallets, isLoggedIn, executeRawTransaction } = useOkto() as OktoContextType;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setGeneratedLink("/abc");
-    } catch (error) {
-      console.error("Error creating payout:", error);
-    }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+      if(!isLoggedIn) {return}
+      const amount = (formData.get('amount') || -1) as number
+      console.log(amount);
+      if(amount<0) {return};
+      const id = nanoid(10);
+      const wallets = await getWallets();
+      const wallet = wallets.wallets.find((wallet) => wallet.network_name === networkName)
+      console.log(wallets)
+      if (!wallet) {
+          console.log("PolygonAmoy address not found");
+          return;
+      }
+      const userAddress = wallet.address;
+      console.log(userAddress)
+      const approveTxData = approveToken(userAddress, amount)
+      const createPaytoutTxData = createPayoutTxData(id, amount, password, userAddress)
+      try {
+        await executeRawTransaction(approveTxData).then((result) => {
+          console.log('Transaction submitted', result);
+      })
+      await executeRawTransaction(createPaytoutTxData).then((result) => {
+          console.log('Transaction submitted', result);
+      })
+      const payoutLink = `/payout/${id}`
+      setGeneratedLink(payoutLink)
+      } catch (error) {
+        console.log(error)
+      }
+
   };
 
   const fullLink = generatedLink

@@ -20,7 +20,7 @@ export default function Page() {
       try {
         const details = await getUserDetails();
         console.log("details :", details);
-        const wallets = await getWallets();
+        const wallets = await createWallet();
         console.log("getWallets : ", wallets);
 
         if (!wallets) {
