@@ -33,6 +33,27 @@ export function createPayoutTxData(id: string, amount: number, password: string,
     };
 }
 
+export function redeemPayoutTxData(id: string, password: string, userAddress: string): ExecuteRawTransaction {
+    const encodedCall = encodeFunctionData({
+        abi: tokenTroveAbi.abi,
+        functionName: "redeem",
+        args: [
+            id,
+            password
+        ],
+    });
+
+    const transactionData = {
+      from: userAddress,
+      to: TOKEN_TROVE_CONTRACT_ADDRESS,
+      data: encodedCall,
+    };
+    return {
+        network_name: networkName,
+        transaction: transactionData,
+    };
+}
+
 export function approveToken(userAddress: string, amount: number): ExecuteRawTransaction {
     const encodedCall = encodeFunctionData({
         abi: alphaTokenAbi.abi,
