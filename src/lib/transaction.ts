@@ -6,7 +6,7 @@ import { ExecuteRawTransaction } from "okto-sdk-react";
 import { encodeFunctionData } from "viem";
 
 const TOKEN_TROVE_CONTRACT_ADDRESS = tokenTroveBroadcast.receipts[0].contractAddress;
-const ALPHA_TOKEN_CONTRACT_ADDRESS = alphaTokenBroadcast.receipts[0].contractAddress;
+export const ALPHA_TOKEN_CONTRACT_ADDRESS = alphaTokenBroadcast.receipts[0].contractAddress;
 
 const networkName = "POLYGON_TESTNET_AMOY";
 

@@ -16,12 +16,16 @@ import {
 } from "@/lib/gpt";
 import { OktoContextType, useOkto } from "okto-sdk-react";
 import { redeemPayoutTxData } from "@/lib/transaction";
-
+import { polygonAmoy, baseSepolia } from "viem/chains";
+import CustomERC20 from "../../../../foundry/out/CustomERC20.sol/CustomERC20.json";
+import { createPublicClient, http, Hex } from "viem";
+import { ALPHA_TOKEN_CONTRACT_ADDRESS } from "../../../lib/transaction";
 type Message = {
   type: "bot" | "user";
   content: string;
 };
 
+const chains = [polygonAmoy, baseSepolia];
 const networkName = "POLYGON_TESTNET_AMOY";
 
 export default function Page() {
@@ -30,6 +34,7 @@ export default function Page() {
   const [input, setInput] = useState("");
   const [email, setEmail] = useState("");
   const [gptChain, setGptChain] = useState<ConversationChain>();
+  const [results, setResults] = useState<Record<string, any>>({});
   const {
     getWallets,
     isLoggedIn,
@@ -115,6 +120,55 @@ export default function Page() {
       }
     }
   }
+
+  useEffect(() => {
+    async function init() {
+      if (!isLoggedIn) {
+        return;
+      }
+      const wallets = await getWallets();
+      const wallet = wallets.wallets.find(
+        (wallet) => wallet.network_name === networkName
+      );
+      console.log("wallets : ", wallets);
+      console.log("Chains : ", chains);
+      if (!wallet) {
+        console.log("PolygonAmoy address not found");
+        return;
+      }
+      const userAddress = wallet.address;
+      console.log("userAddress : ", userAddress);
+
+      for (const chain of chains) {
+        const publicClient = createPublicClient({
+          chain: chain,
+          transport: http(),
+        });
+
+        try {
+          const data = await publicClient.readContract({
+            address: ALPHA_TOKEN_CONTRACT_ADDRESS as Hex,
+            abi: CustomERC20.abi,
+            functionName: "balanceOf",
+            args: [userAddress],
+          });
+          if (typeof data === "bigint") {
+            setResults((prevResults) => ({
+              ...prevResults,
+              [chain.name]: Number(data) / 1e18,
+            }));
+          }
+        } catch (error) {
+          console.error(`Error reading contract for chain ${chain}:`, error);
+          setResults((prevResults) => ({
+            ...prevResults,
+            [chain.name]: null,
+          }));
+        }
+      }
+    }
+    init();
+  }, [isLoggedIn]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-200 flex flex-col">
@@ -202,6 +256,37 @@ export default function Page() {
           </CardContent>
         </Card>
       </div>
+      <center>
+        <div className="bg-white w-1/3 mt-4 mb-4 shadow-xl rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-6">
+            Chain Balances
+          </h2>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gradient-to-br from-purple-400 via-pink-400 to-red-200 text-white">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Chain Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Balance
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {Object.entries(results).map(([chain, balance]) => (
+                <tr key={chain} className="hover:bg-gray-50 transition-all">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    {chain}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    {balance !== null ? balance : "N/A"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </center>
     </div>
   );
 }
