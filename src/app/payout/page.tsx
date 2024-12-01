@@ -13,10 +13,72 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { ArrowRight, Copy } from "lucide-react";
+import { ArrowRight, Copy, Share2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function PayoutLinkGenerator() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
+  const [amount, setAmount] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setGeneratedLink("/abc");
+    } catch (error) {
+      console.error("Error creating payout:", error);
+    }
+  };
+
+  const fullLink = generatedLink
+    ? `${window.location.origin}${generatedLink}`
+    : "";
+
+  const handleShare = async (platform?: string) => {
+    const shareData = {
+      title: "Payout Link",
+      text: "Here's your secure payout link",
+      url: fullLink,
+    };
+
+    if (platform) {
+      let url = "";
+      switch (platform) {
+        case "whatsapp":
+          url = `https://wa.me/?text=${encodeURIComponent(
+            `${shareData.text}: ${shareData.url}`
+          )}`;
+          break;
+        case "gmail":
+          url = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=${encodeURIComponent(
+            shareData.title
+          )}&body=${encodeURIComponent(`${shareData.text}: ${shareData.url}`)}`;
+          break;
+        case "telegram":
+          url = `https://t.me/share/url?url=${encodeURIComponent(
+            shareData.url
+          )}&text=${encodeURIComponent(shareData.text)}`;
+          break;
+        case "discord":
+          url = `https://discord.com/channels/@me?content=${encodeURIComponent(
+            `${shareData.text}: ${shareData.url}`
+          )}`;
+          break;
+      }
+      window.open(url, "_blank");
+    } else if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-200 flex flex-col">
@@ -32,7 +94,7 @@ export default function PayoutLinkGenerator() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="amount" className="text-purple-700">
                   Amount (USD)
@@ -43,6 +105,8 @@ export default function PayoutLinkGenerator() {
                   name="amount"
                   placeholder="Enter amount"
                   required
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
                   className="border-purple-300 text-black focus:border-purple-500 focus:ring-purple-500"
                 />
               </div>
@@ -56,6 +120,8 @@ export default function PayoutLinkGenerator() {
                   name="password"
                   placeholder="Enter password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="border-purple-300 focus:border-purple-500 focus:ring-purple-500"
                 />
               </div>
@@ -74,20 +140,46 @@ export default function PayoutLinkGenerator() {
                 Generated Payout Link:
               </h3>
               <div className="p-3 bg-purple-100 rounded-md w-full break-all text-purple-800">
-                {`${window.location.origin}${generatedLink}`}
+                {fullLink}
               </div>
-              <Button
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    `${window.location.origin}${generatedLink}`
-                  )
-                }
-                variant="outline"
-                className="w-full border-purple-500 text-purple-600 hover:bg-purple-100 transition-colors duration-300 flex items-center justify-center space-x-2"
-              >
-                <span>Copy Link</span>
-                <Copy className="w-4 h-4" />
-              </Button>
+              <div className="flex w-full space-x-2">
+                <Button
+                  onClick={() => navigator.clipboard.writeText(fullLink)}
+                  variant="outline"
+                  className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-100 transition-colors duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Copy</span>
+                  <Copy className="w-4 h-4" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex-1 border-purple-500 text-purple-600 hover:bg-purple-100 transition-colors duration-300 flex items-center justify-center space-x-2"
+                    >
+                      <span>Share</span>
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleShare("whatsapp")}>
+                      WhatsApp
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleShare("gmail")}>
+                      Gmail
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleShare("telegram")}>
+                      Telegram
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleShare("discord")}>
+                      Discord
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleShare()}>
+                      More options...
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </CardFooter>
           )}
         </Card>
