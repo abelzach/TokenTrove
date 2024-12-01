@@ -6,7 +6,7 @@ import { useOkto, OktoContextType } from "okto-sdk-react";
 import { EmailOTPVerification } from "@/components/emailOTPVerification";
 
 export default function Page() {
-  const [activeTab, setActiveTab] = useState<"OKTO" | "Metamask">("Metamask");
+  const [activeTab, setActiveTab] = useState<"OKTO" | "Metamask">("OKTO");
   const {
     isLoggedIn,
     getWallets,
@@ -116,7 +116,7 @@ export default function Page() {
               Secure AI-powered crypto giveaways, unlocking digital treasures
             </p>
             <Link
-              href="/payoutokto"
+              href="/payout"
               className="bg-white text-purple-600 px-8 py-3 rounded-full font-bold text-lg flex items-center space-x-2 transition-all hover:bg-purple-600 hover:text-white animate-pulse"
             >
               <span>Get Started with TokenTrove</span>
@@ -132,7 +132,7 @@ export default function Page() {
               Secure AI-powered crypto giveaways, unlocking digital treasures
             </p>
             <Link
-              href="/payout"
+              href="/payoutmeta"
               className="bg-white text-purple-600 px-8 py-3 rounded-full font-bold text-lg flex items-center space-x-2 transition-all hover:bg-purple-600 hover:text-white animate-pulse"
             >
               <span>Get Started with TokenTrove</span>
