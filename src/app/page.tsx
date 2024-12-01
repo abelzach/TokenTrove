@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useOkto, OktoContextType } from "okto-sdk-react";
@@ -7,7 +7,34 @@ import { EmailOTPVerification } from "@/components/emailOTPVerification";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<"OKTO" | "Metamask">("Metamask");
-  const { isLoggedIn, logOut } = useOkto() as OktoContextType;
+  const {
+    isLoggedIn,
+    getWallets,
+    getUserDetails,
+    createWallet,
+    logOut,
+  } = useOkto() as OktoContextType;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const details = await getUserDetails();
+        console.log("details :", details);
+        const wallets = await getWallets();
+        console.log("getWallets : ", wallets);
+
+        if (!wallets) {
+          console.log("No wallets found, creating a new wallet...");
+          await createWallet();
+          console.log("Wallet created successfully.");
+        }
+      } catch (error) {
+        console.error("Error fetching wallets:", error);
+      }
+    };
+    if (isLoggedIn) fetchData();
+  }, [isLoggedIn]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-200">
       <header className="p-4 flex justify-end items-center">
