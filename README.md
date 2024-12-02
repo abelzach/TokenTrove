@@ -7,7 +7,7 @@ TokenTrove empowers content creators to host engaging giveaways and reward their
 | Contract | BaseMainnet Address |
 |------------------|------------------|
 | TokenTrove  | 0x1b9df4422f9EaC1D091d34D6Ad094692f229c7AA |
-| AlphaToken  | 0xdc0A0D70bf0418DA345D98190E24d4D70FD38bA1 |
+| AlphaToken  | 0x3764d311137268782b75c5b79753723b45c975ef |
 
 ### Polygon Amoy
 | Contract | PolygonAmoy Address |
