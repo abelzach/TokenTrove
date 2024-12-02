@@ -26,7 +26,8 @@ type Message = {
 };
 
 const chains = [polygonAmoy, base];
-const networkName = "POLYGON_TESTNET_AMOY";
+// const networkName = "POLYGON_TESTNET_AMOY";
+const networkName = "BASE";
 
 export default function Page() {
   const { hash }: { hash: string } = useParams();

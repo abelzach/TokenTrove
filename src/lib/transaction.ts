@@ -1,14 +1,15 @@
 import tokenTroveAbi from "../../foundry/out/TokenTrove.sol/TokenTrove.json";
 import alphaTokenAbi from "../../foundry/out/CustomERC20.sol/CustomERC20.json";
-import tokenTroveBroadcast from "../../foundry/broadcast/DeployTokenTroveScript.s.sol/80002/run-latest.json"
-import alphaTokenBroadcast from "../../foundry/broadcast/DeployERC20Tokens.s.sol/80002/run-latest.json"
+import tokenTroveBroadcast from "../../foundry/broadcast/DeployTokenTroveScript.s.sol/8453/run-latest.json"
+import alphaTokenBroadcast from "../../foundry/broadcast/DeployERC20Tokens.s.sol/8453/run-latest.json"
 import { ExecuteRawTransaction } from "okto-sdk-react";
 import { encodeFunctionData } from "viem";
 
 const TOKEN_TROVE_CONTRACT_ADDRESS = tokenTroveBroadcast.receipts[0].contractAddress;
 export const ALPHA_TOKEN_CONTRACT_ADDRESS = alphaTokenBroadcast.receipts[0].contractAddress;
 
-const networkName = "POLYGON_TESTNET_AMOY";
+// const networkName = "POLYGON_TESTNET_AMOY";
+const networkName = "BASE";
 
 export function createPayoutTxData(id: string, amount: number, password: string, userAddress: string, count: number): ExecuteRawTransaction {
     const encodedCall = encodeFunctionData({

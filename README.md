@@ -3,10 +3,23 @@
 TokenTrove empowers content creators to host engaging giveaways and reward their subscribers in an innovative and user friendly way.
 
 ## Depolyed Contracts
+### Base Mainnet
+| Contract | BaseMainnet Address |
+|------------------|------------------|
+| TokenTrove  | 0x1b9df4422f9EaC1D091d34D6Ad094692f229c7AA |
+| AlphaToken  | 0xdc0A0D70bf0418DA345D98190E24d4D70FD38bA1 |
+
+### Polygon Amoy
 | Contract | PolygonAmoy Address |
 |------------------|------------------|
 | TokenTrove  | 0xdc0A0D70bf0418DA345D98190E24d4D70FD38bA1 |
-| OmegaToken  | 0x702fa152ebdd749d48695d1b5b5f44c108404d2a |
+| AlphaToken  | 0x702fa152ebdd749d48695d1b5b5f44c108404d2a |
+
+### Base Sepolia
+| Contract | BaseSepolia Address |
+|------------------|------------------|
+| TokenTrove  | 0xe198C5B3eeD90f10533Cbc959a6E85d82275C19E |
+| AlphaToken  | 0xf9dEf041c0714Af8eE6eD7D15BD0A1622cC5B1a6 |
 
 
 ## Project Setup
@@ -41,7 +54,7 @@ TESTNET_RPC_URL=localhost:8545
 cd foundry
 source .env && forge script script/DeployTokenTroveScript.s.sol  --rpc-url $TESTNET_RPC_URL --private-key $PRIVATE_KEY --broadcast
 ```
-4. Deploy OmegaToken
+4. Deploy AlphaToken
 ```
 cd foundry
 source .env && forge script script/DeployERC20Tokens.s.sol  --rpc-url $TESTNET_RPC_URL --private-key $PRIVATE_KEY --broadcast

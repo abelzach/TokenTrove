@@ -25,7 +25,8 @@ import { nanoid } from "nanoid";
 import { approveToken, createPayoutTxData } from "@/lib/transaction";
 import { ClipLoader } from "react-spinners";
 
-const networkName = "POLYGON_TESTNET_AMOY";
+// const networkName = "POLYGON_TESTNET_AMOY";
+const networkName = "BASE";
 
 export default function PayoutLinkGenerator() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
