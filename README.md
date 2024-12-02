@@ -5,7 +5,7 @@ TokenTrove empowers content creators to host engaging giveaways and reward their
 ## Depolyed Contracts
 | Contract | PolygonAmoy Address |
 |------------------|------------------|
-| TokenTrove  | 0x477f15bd3e37dba2596deb1c5dd13f97a7260f7b |
+| TokenTrove  | 0xdc0A0D70bf0418DA345D98190E24d4D70FD38bA1 |
 | OmegaToken  | 0x702fa152ebdd749d48695d1b5b5f44c108404d2a |
 
 

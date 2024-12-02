@@ -71,9 +71,9 @@ export default function PayoutLinkGenerator() {
     }
     const userAddress = wallet.address;
     console.log(userAddress);
-    const approveTxData = await approveToken(userAddress, amount);
+    const approveTxData = approveToken(userAddress, amount*count);
     // console.log("approveTxData : ", approveTxData);
-    const createPaytoutTxData = await createPayoutTxData(
+    const createPaytoutTxData = createPayoutTxData(
       id,
       amount,
       password,

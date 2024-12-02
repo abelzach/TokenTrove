@@ -41,7 +41,7 @@ contract TokenTrove {
         require(payouts[id].owner == address(0), "Payout with this ID already exists");
         // require(count > 0, "Count must be greater than zero");
         require(
-            IERC20(tokenAddress).allowance(msg.sender, address(this)) >= amount,
+            IERC20(tokenAddress).allowance(msg.sender, address(this)) >= amount*count,
             "Contract does not have sufficient allowance"
         );
         bytes32 passwordHash = keccak256(abi.encodePacked(password));
