@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TokenTrove
 
-## Getting Started
+TokenTrove empowers content creators to host engaging giveaways and reward their subscribers in an innovative and user friendly way.
 
-First, run the development server:
+## Depolyed Contracts
+| Contract | PolygonAmoy Address |
+|------------------|------------------|
+| TokenTrove  | 0x477f15bd3e37dba2596deb1c5dd13f97a7260f7b |
+| OmegaToken  | 0x702fa152ebdd749d48695d1b5b5f44c108404d2a |
 
-```bash
+
+## Project Setup
+
+### 1. Setup NextJs App
+1. Install node dependeices
+```sh
+npm i
+```
+2. Example .env
+```
+GOOGLE_CLIENT_SECRET=<Google Client Secret>
+GOOGLE_CLIENT_ID=<Google client ID>
+AUTH_SECRET=<Auth Secret>
+NEXT_PUBLIC_OPENAI_API_KEY=<OPENAI Api Key>
+NEXT_PUBLIC_OKTO=<OKTO Api Key>
+```
+3. Start frontend
+```sh
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Setup Foundry
+1. Setup [Foundry](https://book.getfoundry.sh/getting-started/installation)
+2. Example .env
+```
+PRIVATE_KEY=0x<private key>
+TESTNET_RPC_URL=localhost:8545
+```
+3. Deploy TokenTrove
+```
+cd foundry
+source .env && forge script script/DeployTokenTroveScript.s.sol  --rpc-url $TESTNET_RPC_URL --private-key $PRIVATE_KEY --broadcast
+```
+4. Deploy OmegaToken
+```
+cd foundry
+source .env && forge script script/DeployERC20Tokens.s.sol  --rpc-url $TESTNET_RPC_URL --private-key $PRIVATE_KEY --broadcast
+```
