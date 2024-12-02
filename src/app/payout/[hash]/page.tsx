@@ -16,7 +16,7 @@ import {
 } from "@/lib/gpt";
 import { OktoContextType, useOkto } from "okto-sdk-react";
 import { redeemPayoutTxData } from "@/lib/transaction";
-import { polygonAmoy, baseSepolia } from "viem/chains";
+import { polygonAmoy, base } from "viem/chains";
 import CustomERC20 from "../../../../foundry/out/CustomERC20.sol/CustomERC20.json";
 import { createPublicClient, http, Hex } from "viem";
 import { ALPHA_TOKEN_CONTRACT_ADDRESS } from "../../../lib/transaction";
@@ -25,7 +25,7 @@ type Message = {
   content: string;
 };
 
-const chains = [polygonAmoy, baseSepolia];
+const chains = [polygonAmoy, base];
 const networkName = "POLYGON_TESTNET_AMOY";
 
 export default function Page() {
