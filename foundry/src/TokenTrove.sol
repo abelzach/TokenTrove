@@ -15,6 +15,7 @@ contract TokenTrove {
         address owner;
         address tokenAddress;
         bytes32 passwordHash;
+        uint256 count;
         PayoutStatus status;
     }
 
@@ -34,9 +35,11 @@ contract TokenTrove {
         string memory id,
         address tokenAddress,
         uint256 amount,
-        string memory password
+        string memory password,
+        uint256 count
     ) external {
         require(payouts[id].owner == address(0), "Payout with this ID already exists");
+        // require(count > 0, "Count must be greater than zero");
         require(
             IERC20(tokenAddress).allowance(msg.sender, address(this)) >= amount,
             "Contract does not have sufficient allowance"
@@ -48,6 +51,7 @@ contract TokenTrove {
             owner: msg.sender,
             tokenAddress: tokenAddress,
             passwordHash: passwordHash,
+            count: count,
             status: PayoutStatus.ACTIVE
         });
     }
@@ -62,6 +66,7 @@ contract TokenTrove {
     function redeem(string calldata id, string memory password) external {
         Payout storage payout = payouts[id];
         require(payout.status == PayoutStatus.ACTIVE, "Payout is not active");
+        require(payout.count > 0, "Payout has been retrieved the maximum number of times");
         require(
             payout.passwordHash == keccak256(abi.encodePacked(password)),
             "Invalid password"
@@ -70,7 +75,10 @@ contract TokenTrove {
         IERC20 token = IERC20(payout.tokenAddress);
         require(token.transferFrom(payout.owner, msg.sender, payout.amount));
 
-        payout.status = PayoutStatus.CLAIMED;
+        payout.count -= 1;
+        if (payout.count == 0) {
+            payout.status = PayoutStatus.CLAIMED;
+        }
     }
 }
 

@@ -10,7 +10,7 @@ export const ALPHA_TOKEN_CONTRACT_ADDRESS = alphaTokenBroadcast.receipts[0].cont
 
 const networkName = "POLYGON_TESTNET_AMOY";
 
-export function createPayoutTxData(id: string, amount: number, password: string, userAddress: string): ExecuteRawTransaction {
+export function createPayoutTxData(id: string, amount: number, password: string, userAddress: string, count: number): ExecuteRawTransaction {
     const encodedCall = encodeFunctionData({
         abi: tokenTroveAbi.abi,
         functionName: "createPayout",
@@ -18,7 +18,8 @@ export function createPayoutTxData(id: string, amount: number, password: string,
             id,
             ALPHA_TOKEN_CONTRACT_ADDRESS,
             BigInt(amount*(10**18)),
-            password
+            password,
+            count
         ],
     });
 

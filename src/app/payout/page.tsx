@@ -30,6 +30,7 @@ const networkName = "POLYGON_TESTNET_AMOY";
 export default function PayoutLinkGenerator() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
+  const [users, setUsers] = useState("");
   const [password, setPassword] = useState("");
   const [isFormVisible, setIsFormVisible] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -51,6 +52,7 @@ export default function PayoutLinkGenerator() {
       return;
     }
     const amount = (formData.get("amount") || -1) as number;
+    const count = (formData.get("count") || -1) as number;
     console.log(amount);
     if (amount < 0) {
       setLoading(false);
@@ -75,7 +77,8 @@ export default function PayoutLinkGenerator() {
       id,
       amount,
       password,
-      userAddress
+      userAddress,
+      count
     );
     // console.log("createPaytoutTxData : ", createPaytoutTxData);
     try {
@@ -220,6 +223,21 @@ export default function PayoutLinkGenerator() {
                       required
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
+                      className="border-purple-300 text-black focus:border-purple-500 focus:ring-purple-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="amount" className="text-purple-700">
+                      Maximum Usage
+                    </Label>
+                    <Input
+                      type="number"
+                      id="count"
+                      name="count"
+                      placeholder="Enter count"
+                      required
+                      value={users}
+                      onChange={(e) => setUsers(e.target.value)}
                       className="border-purple-300 text-black focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
